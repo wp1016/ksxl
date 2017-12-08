@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>口算训练</title>
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body >
+<div id="vm" v-cloak>
+	<div class="mentalWrap" v-show="isEdit">
+		<div class="mental-edit">
+			<div class="sidebar">
+				<div class="chooseclass">
+					<span>选择年级</span>
+					<div class="selectMod">
+						<p v-on:click.stop="dropdownClick"><span>{{ selectedGrade.gradeName }}</span><i></i></p>
+						<ul v-show="isDropdownListShow">
+							<li v-for="grade in gradeList" v-on:click="dropdownItemClick(grade)">{{ grade.gradeName }}</li>						
+						</ul>
+					</div>
+				</div>
+				<div class="sidenav">
+					<dl v-for="chapter in selectedGrade.chapterList">
+						<dt v-bind:class="{'active':chapter.isActive}" v-on:click="chapterTitleClick(chapter)">
+							<span>{{chapter.chapterName}}</span>
+							<label class="checkbox"><input class="inp-desp" type="checkbox" v-bind:checked="chapter.selected" v-on:click="chapterCheckClick(chapter)"><i></i></label>
+						</dt>
+						<dd v-bind:class="{'show':chapter.isActive}" v-for="p in chapter.pointList">
+							<span>{{p.pointName}}</span>
+							<label class="checkbox"><input class="inp-desp" type="checkbox" v-bind:checked="p.selected" v-on:click="pointCheckClick(chapter,p)"><i></i></label>
+						</dd>					
+					</dl>				
+				</div>
+			</div>
+			<div class="main">
+				<div class="shownum">
+					<ul>
+						<li><span>类别</span><em>{{ pointsCount }}</em></li>
+						<li><span>题量</span><em>{{ testsCount }}</em></li>
+					</ul>
+				</div>
+				<div class="list" v-show="!tipShow">
+					<p v-for="selPoint in selPoints">
+						{{ selPoint.pointName }}
+						 <tooltips v-bind:show="selPoint.isNumInputTipShow">{{ selPoint.numInputTipsContent }}</tooltips> 
+						<span>						
+							<i class="add" v-on:click="increase(selPoint)">+</i>
+							<input type="text" v-bind:value="selPoint.count" v-on:change.stop="numberInputChanged(selPoint, $event)">
+							<i class="min" v-on:click="decrease(selPoint)">-</i>
+						</span>
+					</p>
+				</div>
+				<div class="nolist" v-show="tipShow"><img src="img/choose-points.png"/></div>
+				<div class="modbtn"><a v-bind:class="{'blueBtn':!tipShow, 'disableBtn':tipShow }" v-on:click.stop="next">下一步</a></div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div class="mentalWrap" v-show="!isEdit">
+		<div class="mental whlimit">
+			<div class="mentalscroll">
+				<div class="mentalcont">
+                    <div class="info">
+                        <ul>
+                            <li><span>类别</span><em>{{ pointsCount }}</em></li>
+                            <li><span>题量</span><em>{{ testsCount }}</em></li>
+                        </ul>
+                    </div>	
+					<div class="pre-list" v-for="(point, idx) in selPoints">
+						<div class="title clearfix"><h3>{{ point.pointName }}</h3><span class="more" v-show="showChangeBtn" v-on:click="updateTests(point, idx)">换</span></div>
+						<div class="cont"><ul class="clearfix" v-html="testsHtml[idx]"></ul></div>
+					</div>
+				</div>	
+			</div>		
+            <div class="funcBtns">
+                <ul>
+                    <li><a class="ret-add-btn" v-on:click.stop="returnEdit">返回添加</a></li>
+                    <li><a v-on:click.stop="preview">预览</a></li>
+                    <li><a v-on:click.stop="save">保存</a></li>                    
+                </ul>
+            </div>        
+        </div>        
+    </div>
+</div>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/rules.js"></script>
+<script type="text/javascript" src="js/edit.js"></script>
+</body>
+</html>

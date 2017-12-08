@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>口算训练</title>
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">-->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="css/answer.css">    
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/es6-promise.auto.min.js"></script>
+    <script type="text/javascript" src="js/axios.min.js"></script>
+</head>
+<body>
+<div :class="{'coverWrap':isCoverShow}" id="vm" style="height:100%;">
+	<div class="cover" v-show="isCoverShow">
+		<div class="box">
+			<p><img src="img/cover.jpg"></p>
+            <a href="javascript:void(0)"><img src="img/coverbtn.png" v-on:click="beginAnswerClick" /></a>
+		</div>
+	</div>
+
+	<div class="answerPop" v-show="isAnswerShow">
+		<div class="topmental clearfix">
+			<div class="numtime">
+				<p><span>题目</span><em>{{ currentTestIndex }}<i>/</i><i>{{ totalTestNum }}</i></em></p>
+				<p><span>耗时</span><em>{{ clock }}</em></p>
+			</div>
+			<div class="write" v-on:click.stop="hideCursor">
+				<div v-for="(item,index) in allTests" :key="index" v-if="index===currentTestIndex-1">
+					<span >{{item[0]}}</span>
+					<em>{{item[1]}}</em>
+					<span>{{item[2]}}</span>
+					<em>=</em>
+					<span :class="resultWrapper" v-on:click.stop="showCursor">
+						<span class="inpWrap" ref="inpWrap" :style="{width:inpWidth+'px'}">
+							<span v-for="item in valList" :class="{line:item.isLine}" v-on:touchstart="lineTouchStart($event)" v-on:touchmove="lineTouchMove($event)" v-on:touchend="lineTouchEnd($event)">{{item.val}}</span>
+						</span>
+					</span>
+				</div>
+			</div>
+		</div>		
+		<div class="keywrite">
+			<ul class="clearfix">
+				<li><a v-on:click="numberClick($event)">1</a></li>
+				<li><a v-on:click="numberClick($event)">2</a></li>
+				<li><a v-on:click="numberClick($event)">3</a></li>
+				<li><a v-on:click="numberClick($event)">4</a></li>
+				<li><a v-on:click="numberClick($event)">5</a></li>
+				<li><a v-on:click="numberClick($event)">6</a></li>
+				<li><a v-on:click="numberClick($event)">7</a></li>
+				<li><a v-on:click="numberClick($event)">8</a></li>
+				<li><a v-on:click="numberClick($event)">9</a></li>
+				<li><a v-on:click="numberClick($event)">0</a></li>
+				<li><a v-on:click="numberClick($event)">.</a></li>
+				<li><a v-on:click="numberClick($event)"><span></span></a></li>
+			</ul>
+		</div>
+        <div class="nextbtn"><a v-on:click.stop="nextTestClick">下一题</a></div>
+	</div>
+	
+	<div class="ansResult" v-show="isAnsResultShow">
+		<div class="resultPop clearfix">
+			<div class="lbox">
+				<div class="task_canvas">
+					<canvas id="yuan" width="180" height="180" ></canvas>
+				</div>
+				<div class="list">
+					<ul>
+						<li class="li1"><span>答对题目数</span><em>{{totalRightNum}}</em></li>
+						<li class="li2"><span>答错题目数</span><em>{{totalWrong}}</em></li>
+						<li class="li3"><span>耗时/秒</span><em>{{clock}}</em></li>
+					</ul>
+				</div>	
+			</div>
+			<div class="rbox">
+                <ul class="clearfix">
+                    <li v-for="idx in ansResults" v-html="getAnsResultItemHtml(idx)"></li>
+                </ul>
+			</div>
+		</div>
+	
+        <div class="btnbar">
+            <a v-on:click.stop="redo"><img title="重做" src="img/redo.png" /></a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/rules.js"></script>
+<script type="text/javascript" src="js/answer.js"></script>
+</body>
+</html>
