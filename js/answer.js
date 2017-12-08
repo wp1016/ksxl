@@ -168,12 +168,15 @@
                         inpWidth+=parseFloat(getComputedStyle(valWrap[i]).width)
                     }
                     _.inpWidth=inpWidth+50
+                    adjustUserInput();
                 })
 		    } else if (txt == '' && this.userInp.length > 0) {
 		        this.userInp = this.userInp.substring(0, this.userInp.length - 1);
-                this.valList.splice(this.valList.length-2,1)
+		        this.$nextTick(function () {
+                    _.valList.splice(_.valList.length-2,1)
+                    adjustUserInput();
+                })
             }
-            adjustUserInput();
 
 
             //document.getElementsByClassName('inp')[0].value = this.userInp;
