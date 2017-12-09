@@ -121,7 +121,6 @@
 			this.timeCounting();			
 		},
 		nextTestClick:function(){
-            console.log(this.currentTestIndex,this.totalTestNum)
             var inpWrap = this.$refs.inpWrap[0].children;
 	        var inpTxt = 0;
 	        for(var j = 0;j < inpWrap.length;j++){
