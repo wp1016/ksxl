@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 	<meta charset="UTF-8">
 	<title>口算训练</title>
@@ -34,8 +34,8 @@
 					<span>{{item[2]}}</span>
 					<em>=</em>
 					<span :class="resultWrapper" v-on:click.stop="showCursor">
-						<span class="inpWrap" ref="inpWrap" :style="{width:inpWidth+'px'}">
-							<span v-for="item in valList" :class="{line:item.isLine}" v-on:touchstart="lineTouchStart($event)" v-on:touchmove="lineTouchMove($event)" v-on:touchend="lineTouchEnd($event)">{{item.val}}</span>
+						<span class="inpWrap" ref="inpWrap" v-on:touchstart.stop="lineTouchStart($event)" v-on:touchmove.stop="lineTouchMove($event)" v-on:touchend.stop="lineTouchEnd($event)">
+							<span v-for="item in valList" :class="{line:item.isLine}" >{{item.val}}</span>
 						</span>
 					</span>
 				</div>

@@ -22,11 +22,11 @@
         }],
         settings: {},
 	    guessWordId:'',
-        inpWidth:50,
         resultWrapper:{
             resultWrapper:true,
             showCursor:true
-        }
+        },
+		ansPosition:[]
 	},
 	computed:{		
 		isCoverShow:function(){
@@ -149,6 +149,12 @@
 		numberClick: function (evt) {
 	        var _ = this;
 		    var txt = evt.target.innerText;
+		    var index=0;
+		    for(var j = 0;j<this.valList.length;j++){
+		    	if(this.valList[j].isLine){
+		    		index=j
+				}
+			}
 		    if (txt != '') {
 		        if (this.userInp.length == 16) return;
 		        var arr = [];
@@ -159,25 +165,21 @@
                     isLine:false,
                     val:txt
                 }
-                this.valList.splice(this.valList.length-1,0,userInp)
-                this.$nextTick(function () {
-                    var inpWrap=_.$refs.inpWrap[0];
-                    var valWrap=inpWrap.children
-                    var inpWidth=0
-                    for (var i=0;i<valWrap.length;i++){
-                        inpWidth+=parseFloat(getComputedStyle(valWrap[i]).width)
-                    }
-                    _.inpWidth=inpWidth+50
-                    adjustUserInput();
-                })
+                if(index==0){
+                    this.valList.splice(0,0,userInp)
+				}else{
+                    this.valList.splice(index,0,userInp)
+                }
+
 		    } else if (txt == '' && this.userInp.length > 0) {
 		        this.userInp = this.userInp.substring(0, this.userInp.length - 1);
-		        this.$nextTick(function () {
-                    _.valList.splice(_.valList.length-2,1)
-                    adjustUserInput();
-                })
+		        if(index!=0){
+                    this.valList.splice(index-1,1)
+                }
             }
-
+            this.$nextTick(function () {
+                adjustUserInput();
+            })
 
             //document.getElementsByClassName('inp')[0].value = this.userInp;
 		    //moveCursor();
@@ -356,7 +358,74 @@
                 //console.log(err);
             });
         },
-
+        lineTouchStart:function (e) {
+			var inpWrap=document.querySelector('.inpWrap');
+	    	var spans=inpWrap.children;
+	    	var sLeft=[];
+	    	for (var i = 0;i<spans.length;i++){
+	    		if(spans[i].className=='line'){
+	    			continue
+				}
+				sLeft.push(spans[i].offsetLeft)
+			}
+			this.ansPosition=sLeft
+        },
+        lineTouchMove:function (e) {
+            var inpWrap=document.querySelector('.inpWrap');
+            var cX=e.touches[0].clientX;
+			var inpWrapLeft=getOffsetLeft(inpWrap);
+			var x=cX-inpWrapLeft;
+			var lineIdx=0;
+            var xNums=[];
+            var line={
+            	isLine:true,
+				val:''
+			}
+            for(var j = 0; j<this.valList.length ; j++){
+				if(this.valList[j].isLine){
+					lineIdx=j
+				}
+			}
+			for (var n = 0; n<this.ansPosition.length ; n++){
+            	xNums.push(Math.abs(x-this.ansPosition[n]))
+			}
+			var xMin=Math.min.apply({},xNums);
+            var idx=xNums.indexOf(xMin);
+            this.valList.splice(lineIdx,1)
+            if(x>this.ansPosition[this.ansPosition.length-1]){
+				this.valList.splice(this.valList.length,0,line);
+			}else{
+                this.valList.splice(idx,0,line);
+			}
+        },
+		lineTouchEnd:function (e) {
+            var inpWrap=document.querySelector('.inpWrap');
+            var cX=e.changedTouches[0].clientX;
+            var inpWrapLeft=getOffsetLeft(inpWrap);
+            var x=cX-inpWrapLeft;
+            var lineIdx=0;
+            var xNums=[];
+            var line={
+                isLine:true,
+                val:''
+            }
+            for(var j = 0; j<this.valList.length ; j++){
+                if(this.valList[j].isLine){
+                    lineIdx=j
+                }
+            }
+            for (var n = 0; n<this.ansPosition.length ; n++){
+                xNums.push(Math.abs(x-this.ansPosition[n]))
+            }
+            var xMin=Math.min.apply({},xNums);
+            var idx=xNums.indexOf(xMin);
+            this.valList.splice(lineIdx,1)
+            if(x>this.ansPosition[this.ansPosition.length-1]){
+                this.valList.splice(this.valList.length,0,line);
+            }else{
+                this.valList.splice(idx,0,line);
+            }
+        }
  	},
 	created:function(){
 		var _this = this;
@@ -399,34 +468,29 @@ function adjustUserInput() {
     for(var i=0 ; i<oInpWrapChildren.length ; i++){
         oInpWrapW+= parseFloat(getComputedStyle(oInpWrapChildren[i]).width)
     }
-    oInpWrapW+=50;
-    console.log(oWrapW,oInpWrapW)
+    oInpWrapW+=2;
     oInpWrap.style.transform = "";
-    oInpWrap.style.width=oInpWrapW+'px'
     if (oInpWrapW > oWrapW) {
         if (oInpWrapW > oWrapW) {
+            oInpWrap.style.width=oInpWrapW+'px'
             var ratio = oWrapW / oInpWrapW;
             var left =0;
             oInpWrap.style.transform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
             oInpWrap.style.WebkitTransform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
+        }else{
+            oInpWrap.style.width=oWrapW+'px'
         }
     }
 }
 
-//模拟光标
-
-
-function moveCursor() {
-    var oWrap = document.querySelector('.resultWrapper'),
-        oInp = oWrap.querySelector('input'),
-        oLine=oWrap.querySelector('.line'),
-        oWrapW = parseInt(getComputedStyle(oWrap).width),
-        oVal=oInp.value,
-        oLen=oVal.length,
-        oFs=parseInt(getComputedStyle(oInp).fontSize),
-        oScale=1;
-        if(getComputedStyle(oInp).transform!='none'){
-            oScale=getComputedStyle(oInp).transform.split('(')[1].split(',')[0];
-        }
-        oLine.style.left=oLen*oFs+'px'
+//获取元素距离浏览器最左边的距离
+function getOffsetLeft (obj) {
+    var tmp = obj.offsetLeft;
+    var val = obj.offsetParent;
+    while(val != null){
+        tmp += val.offsetLeft;
+        val = val.offsetParent;
+    }
+    return tmp;
 }
+
