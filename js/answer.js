@@ -373,9 +373,15 @@
         },
         lineTouchMove:function (e) {
             var inpWrap=document.querySelector('.inpWrap');
+            var scale=getComputedStyle(inpWrap).webkitTransform;
+            if(scale){
+            	scale=scale.split('(')[1].split(',')[0]
+			}else{
+            	scale=1
+			}
             var cX=e.touches[0].clientX;
 			var inpWrapLeft=getOffsetLeft(inpWrap);
-			var x=cX-inpWrapLeft;
+			var x=(cX-inpWrapLeft)/scale;
 			var lineIdx=0;
             var xNums=[];
             var line={
@@ -401,9 +407,15 @@
         },
 		lineTouchEnd:function (e) {
             var inpWrap=document.querySelector('.inpWrap');
+            var scale=getComputedStyle(inpWrap).webkitTransform;
+            if(scale){
+                scale=scale.split('(')[1].split(',')[0]
+            }else{
+                scale=1
+            }
             var cX=e.changedTouches[0].clientX;
             var inpWrapLeft=getOffsetLeft(inpWrap);
-            var x=cX-inpWrapLeft;
+            var x=(cX-inpWrapLeft)/scale;
             var lineIdx=0;
             var xNums=[];
             var line={
