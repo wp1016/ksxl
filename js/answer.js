@@ -92,7 +92,7 @@
 			return cnt;
 		},
 		getHtmlTextForTest:function(test){
-		    var cont = '';
+		   /* var cont = '';
 			for(var i=0; i<test.length-1; ++i){
 				if(i==test.length-2) cont += "<em>=</em>";					
 				var item=test[i];
@@ -104,11 +104,11 @@
 				    cont += '<span class="resultWrapper"><span class="inpWrap"><input type="text" class="inp" maxlength="15" readonly onclick="showCursor(this)" oninput="checkNum(this)" onblur="logInputMousePosition(this)"/><span class="line"></span></span></span>';
 				}
 			}			
-			return cont;
+			return cont;*/
 		},
 		presentTest:function(){
-		    this.currentTestHtmlText = this.getHtmlTextForTest(this.allTests[this.currentTestIndex]);
-		    /*Vue.nextTick(function () {
+		    /*this.currentTestHtmlText = this.getHtmlTextForTest(this.allTests[this.currentTestIndex]);
+		    Vue.nextTick(function () {
 		        document.querySelector('.inp').focus();
 		    });*/
 			this.currentTestIndex++;			
@@ -124,7 +124,9 @@
             var inpWrap = this.$refs.inpWrap[0].children;
 	        var inpTxt = 0;
 	        for(var j = 0;j < inpWrap.length;j++){
-	            inpTxt += parseFloat(inpWrap[j].innerHTML)
+	        	if(inpWrap[j].innerHTML){
+                    inpTxt += parseFloat(inpWrap[j].innerHTML)
+                }
             }
 		    var inpNum = parseFloat(inpTxt);
 		    this.userAns.push(isNaN(inpNum) ? -1 : inpNum);
