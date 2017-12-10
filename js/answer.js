@@ -75,10 +75,10 @@
 			return "?"== expr;
 		},
         hideCursor:function () {
-          return this.resultWrapper.showCursor = false
+          	this.resultWrapper.showCursor = false
         },
         showCursor:function () {
-            return this.resultWrapper.showCursor = true
+            this.resultWrapper.showCursor = true
         },
 		getTotalRight:function(){
 			var cnt=0;
@@ -148,6 +148,9 @@
 			this.presentTest();			
 		},
 		numberClick: function (evt) {
+	    	if(!this.resultWrapper.showCursor){
+	    		return
+			}
 	        var _ = this;
 		    var txt = evt.target.innerText;
 		    var index=0;
@@ -408,7 +411,7 @@
 		lineTouchEnd:function (e) {
             var inpWrap=document.querySelector('.inpWrap');
             var scale=getComputedStyle(inpWrap).webkitTransform;
-            if(scale){
+            if(scale!='none'){
                 scale=scale.split('(')[1].split(',')[0]
             }else{
                 scale=1
