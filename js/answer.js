@@ -377,7 +377,7 @@
         lineTouchMove:function (e) {
             var inpWrap=document.querySelector('.inpWrap');
             var scale=getComputedStyle(inpWrap).webkitTransform;
-            if(scale){
+            if(scale!='none'){
             	scale=scale.split('(')[1].split(',')[0]
 			}else{
             	scale=1

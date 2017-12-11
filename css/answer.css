@@ -185,7 +185,7 @@ a{ text-decoration: none;}
 
 .coverWrap{background: #138bec; width: 100%; height: 100%;}
 /* .cover{text-align: center; margin: 5% 0; width: 100%; text-align: center;} */
-.cover{ width: 100%; height: 100%; text-align: center;}
+.cover{ width: 100%; height: 100%; text-align: center;overflow:hidden;}
 .cover:before{ content: ''; height: 100%; vertical-align: middle; display: inline-block;}
 .cover .box{ display: inline-block; vertical-align: middle; text-align: center; width: 80%;  }
 .box > a { cursor:pointer; }
