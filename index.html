@@ -28,19 +28,18 @@
 				<p><span>耗时</span><em>{{ clock }}</em></p>
 			</div>
 			<div class="write" v-on:click.stop="hideCursor">
-				<div v-for="(item,index) in allTests" :key="index" v-if="index===currentTestIndex-1">
-					<span >{{item[0]}}</span>
-					<em>{{item[1]}}</em>
-					<span>{{item[2]}}</span>
-					<em>=</em>
-					<span :class="resultWrapper" v-on:click.stop="showCursor">
-						<span class="inpWrap" ref="inpWrap" v-on:touchstart.stop="lineTouchStart($event)" v-on:touchmove.stop="lineTouchMove($event)" v-on:touchend.stop="lineTouchEnd($event)">
+				<span v-for="(item,index) in currentTestHtmlText" :key="index" v-if="index<currentTestHtmlText.length-1">
+					<em v-if="index==currentTestHtmlText.length-2">=</em>
+					<span v-if="testNum(item)">{{item}}</span>
+					<em v-else-if="testOperator(item)">{{item}}</em>
+					<span v-else-if="testBlank(item)" :class="resultWrapper" v-on:click.stop="showCursor" v-on:touchstart.stop.prevent="lineTouchStart($event)" v-on:touchmove.stop.prevent="lineTouchMove($event)" v-on:touchend.stop.prevent="lineTouchEnd($event)">
+						<span class="inpWrap" ref="inpWrap">
 							<span v-for="item in valList" :class="{line:item.isLine}" >{{item.val}}</span>
 						</span>
 					</span>
-				</div>
+				</span>
 			</div>
-		</div>		
+		</div>
 		<div class="keywrite">
 			<ul class="clearfix">
 				<li><a v-on:click="numberClick($event)">1</a></li>

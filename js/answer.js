@@ -75,10 +75,10 @@
 			return "?"== expr;
 		},
         hideCursor:function () {
-          	this.resultWrapper.showCursor = false
+            this.$set(this.resultWrapper,'showCursor',false)
         },
         showCursor:function () {
-            this.resultWrapper.showCursor = true
+            this.$set(this.resultWrapper,'showCursor',true)
         },
 		getTotalRight:function(){
 			var cnt=0;
@@ -107,6 +107,7 @@
 			return cont;*/
 		},
 		presentTest:function(){
+            this.currentTestHtmlText=this.allTests[this.currentTestIndex];
 		    /*this.currentTestHtmlText = this.getHtmlTextForTest(this.allTests[this.currentTestIndex]);
 		    Vue.nextTick(function () {
 		        document.querySelector('.inp').focus();
@@ -125,7 +126,7 @@
 	        var inpTxt = 0;
 	        for(var j = 0;j < inpWrap.length;j++){
 	        	if(inpWrap[j].innerHTML){
-                    inpTxt += parseFloat(inpWrap[j].innerHTML)
+                    inpTxt += inpWrap[j].innerHTML
                 }
             }
 		    var inpNum = parseFloat(inpTxt);
@@ -160,7 +161,7 @@
 				}
 			}
 		    if (txt != '') {
-		        if (this.userInp.length == 16) return;
+		        if (this.userInp.length == 15) return;
 		        var arr = [];
 		        for (var i = 0; i < this.userInp.length; ++i) arr.push(this.userInp[i]);
 		        arr.splice(inputLastMousePos++, 0, txt);
@@ -177,16 +178,13 @@
 
 		    } else if (txt == '' && this.userInp.length > 0) {
 		        this.userInp = this.userInp.substring(0, this.userInp.length - 1);
-		        if(index!=0){
+                if(index!=0){
                     this.valList.splice(index-1,1)
                 }
             }
             this.$nextTick(function () {
                 adjustUserInput();
             })
-
-            //document.getElementsByClassName('inp')[0].value = this.userInp;
-		    //moveCursor();
 		},
 		timeCounting:function() {
 			var _this = this;
@@ -363,6 +361,7 @@
             });
         },
         lineTouchStart:function (e) {
+            this.$set(this.resultWrapper,'showCursor',true)
 			var inpWrap=document.querySelector('.inpWrap');
 	    	var spans=inpWrap.children;
 	    	var sLeft=[];
@@ -486,17 +485,15 @@ function adjustUserInput() {
     }
     oInpWrapW+=2;
     oInpWrap.style.transform = "";
-    if (oInpWrapW > oWrapW) {
-        if (oInpWrapW > oWrapW) {
-            oInpWrap.style.width=oInpWrapW+'px'
-            var ratio = oWrapW / oInpWrapW;
-            var left =0;
-            oInpWrap.style.transform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
-            oInpWrap.style.WebkitTransform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
-        }else{
-            oInpWrap.style.width=oWrapW+'px'
-        }
-    }
+	if (oInpWrapW > oWrapW) {
+		oInpWrap.style.width=(oInpWrapW+1)+'px'
+		var ratio = oWrapW / oInpWrapW;
+		var left =0;
+		oInpWrap.style.transform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
+		oInpWrap.style.WebkitTransform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
+	}else{
+		oInpWrap.style.width=oWrapW+'px'
+	}
 }
 
 //获取元素距离浏览器最左边的距离
