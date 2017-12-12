@@ -123,7 +123,7 @@
 		},
 		nextTestClick:function(){
             var inpWrap = this.$refs.inpWrap[0].children;
-	        var inpTxt = 0;
+	        var inpTxt = '';
 	        for(var j = 0;j < inpWrap.length;j++){
 	        	if(inpWrap[j].innerHTML){
                     inpTxt += inpWrap[j].innerHTML
@@ -277,7 +277,8 @@
 			timer=null;
 		},
 		getAnsResultItemHtml:function(idx){
-			var test=this.allTests[idx], userAns=this.userAns[idx], ret, ansRight;			
+			var test=this.allTests[idx], userAns=this.userAns[idx], ret, ansRight;
+			console.log(userAns)
 			ret='<b>(' + (idx+1) + ')&nbsp;</b>';
 			ansStatus = userAns==test[test.length-1] ? 'dui':'cuo';			
 			for(var i=0; i<test.length-1; ++i){
