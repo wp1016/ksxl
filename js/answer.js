@@ -26,7 +26,8 @@
             resultWrapper:true,
             showCursor:true
         },
-		ansPosition:[]
+        ansPosition: [],
+	    nextBtnContent:'下一题'
 	},
 	computed:{		
 		isCoverShow:function(){
@@ -75,10 +76,12 @@
 			return "?"== expr;
 		},
         hideCursor:function () {
-            this.$set(this.resultWrapper,'showCursor',false)
+            if(this.resultWrapper.showCursor){
+                this.$set(this.resultWrapper,'showCursor',false)
+            }
         },
         showCursor:function () {
-            this.$set(this.resultWrapper,'showCursor',true)
+			this.$set(this.resultWrapper,'showCursor',true)
         },
 		getTotalRight:function(){
 			var cnt=0;
@@ -108,10 +111,10 @@
 		},
 		presentTest:function(){
             this.currentTestHtmlText=this.allTests[this.currentTestIndex];
-		    /*this.currentTestHtmlText = this.getHtmlTextForTest(this.allTests[this.currentTestIndex]);
-		    Vue.nextTick(function () {
-		        document.querySelector('.inp').focus();
-		    });*/
+            /*this.currentTestHtmlText = this.getHtmlTextForTest(this.allTests[this.currentTestIndex]);
+            Vue.nextTick(function () {
+                document.querySelector('.inp').focus();
+            });*/
 			this.currentTestIndex++;			
 		},
 		beginAnswerClick:function(){		    
@@ -135,8 +138,8 @@
                 isLine:true,
                 val:''
             }];
-			this.userInp = '';
-			if(this.currentTestIndex >= this.totalTestNum){
+		    this.userInp = '';
+		    if(this.currentTestIndex >= this.totalTestNum){
 			    this.pauseTimeCounting();
 			    this.endTime = this.getDateTime(new Date());
 				this.currentModuleIndex=2;				
@@ -146,7 +149,13 @@
 				this.submit();
 				return;
 			}
-			this.presentTest();			
+		    this.presentTest();
+		    this.$nextTick(function () {
+                adjustUserInput();
+            });
+		    if (this.currentTestIndex == this.totalTestNum) {
+		        this.nextBtnContent = '提交';
+		    } 
 		},
 		numberClick: function (evt) {
 	    	if(!this.resultWrapper.showCursor){
@@ -178,13 +187,16 @@
 
 		    } else if (txt == '' && this.userInp.length > 0) {
 		        this.userInp = this.userInp.substring(0, this.userInp.length - 1);
-                if(index!=0){
+		        if(index!=0){
                     this.valList.splice(index-1,1)
                 }
             }
             this.$nextTick(function () {
                 adjustUserInput();
             })
+
+            //document.getElementsByClassName('inp')[0].value = this.userInp;
+		    //moveCursor();
 		},
 		timeCounting:function() {
 			var _this = this;
@@ -240,7 +252,7 @@
 				// 画内部空白  
 				context.beginPath();  
 				context.moveTo(24, 24);  
-				context.arc(c_width/2, c_height/2, c_height/2-10, 0, Math.PI * 2, true);  
+				context.arc(c_width/2, c_height/2, c_height/2-12, 0, Math.PI * 2, true);
 				context.lineCap = 'round';
 				context.closePath();  
 				context.fillStyle = 'rgba(255,255,255,1)';  // 填充内部颜色
@@ -277,8 +289,7 @@
 			timer=null;
 		},
 		getAnsResultItemHtml:function(idx){
-			var test=this.allTests[idx], userAns=this.userAns[idx], ret, ansRight;
-			console.log(userAns)
+			var test=this.allTests[idx], userAns=this.userAns[idx], ret, ansRight;			
 			ret='<b>(' + (idx+1) + ')&nbsp;</b>';
 			ansStatus = userAns==test[test.length-1] ? 'dui':'cuo';			
 			for(var i=0; i<test.length-1; ++i){
@@ -314,6 +325,7 @@
  	        this.seconds = 0; 	        
  	        this.totalRightNum = 0;
  	        this.currentTestIndex = 0;
+ 	        this.nextBtnContent = '下一题';
  	    },
         submit:function(){
             var ansList = [];
@@ -362,7 +374,9 @@
             });
         },
         lineTouchStart:function (e) {
-            this.$set(this.resultWrapper,'showCursor',true)
+	    	if(!this.resultWrapper.showCursor){
+                this.$set(this.resultWrapper,'showCursor',true)
+            }
 			var inpWrap=document.querySelector('.inpWrap');
 	    	var spans=inpWrap.children;
 	    	var sLeft=[];
@@ -487,13 +501,15 @@ function adjustUserInput() {
     oInpWrapW+=2;
     oInpWrap.style.transform = "";
 	if (oInpWrapW > oWrapW) {
-		oInpWrap.style.width=(oInpWrapW+1)+'px'
+		oInpWrap.style.width=oInpWrapW+'px'
 		var ratio = oWrapW / oInpWrapW;
 		var left =0;
 		oInpWrap.style.transform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
 		oInpWrap.style.WebkitTransform = 'matrix('+ratio+',0,0,'+ratio+','+left+',0)';
 	}else{
 		oInpWrap.style.width=oWrapW+'px'
+        oInpWrap.style.transform = 'matrix(1,0,0,1,0,0)';
+        oInpWrap.style.WebkitTransform = 'matrix(1,0,0,1,0,0)';
 	}
 }
 

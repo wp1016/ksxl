@@ -39,31 +39,31 @@
 					</span>
 				</span>
 			</div>
-		</div>
+		</div>		
 		<div class="keywrite">
 			<ul class="clearfix">
-				<li><a v-on:click="numberClick($event)">1</a></li>
-				<li><a v-on:click="numberClick($event)">2</a></li>
-				<li><a v-on:click="numberClick($event)">3</a></li>
-				<li><a v-on:click="numberClick($event)">4</a></li>
-				<li><a v-on:click="numberClick($event)">5</a></li>
-				<li><a v-on:click="numberClick($event)">6</a></li>
-				<li><a v-on:click="numberClick($event)">7</a></li>
-				<li><a v-on:click="numberClick($event)">8</a></li>
-				<li><a v-on:click="numberClick($event)">9</a></li>
-				<li><a v-on:click="numberClick($event)">0</a></li>
-				<li><a v-on:click="numberClick($event)">.</a></li>
-				<li><a v-on:click="numberClick($event)"><span></span></a></li>
+                <li v-on:click="numberClick($event)"><a>1</a></li>
+                <li v-on:click="numberClick($event)"><a>2</a></li>
+                <li v-on:click="numberClick($event)"><a>3</a></li>
+                <li v-on:click="numberClick($event)"><a>4</a></li>
+                <li v-on:click="numberClick($event)"><a>5</a></li>
+                <li v-on:click="numberClick($event)"><a>6</a></li>
+                <li v-on:click="numberClick($event)"><a>7</a></li>
+                <li v-on:click="numberClick($event)"><a>8</a></li>
+                <li v-on:click="numberClick($event)"><a>9</a></li>
+                <li v-on:click="numberClick($event)"><a>0</a></li>
+                <li v-on:click="numberClick($event)"><a>.</a></li>
+                <li v-on:click="numberClick($event)"><a><span></span></a></li>
 			</ul>
 		</div>
-        <div class="nextbtn"><a v-on:click.stop="nextTestClick">下一题</a></div>
+        <div class="nextbtn"><a v-on:click.stop="nextTestClick">{{nextBtnContent}}</a></div>
 	</div>
 	
 	<div class="ansResult" v-show="isAnsResultShow">
 		<div class="resultPop clearfix">
 			<div class="lbox">
 				<div class="task_canvas">
-					<canvas id="yuan" width="180" height="180" ></canvas>
+					<canvas id="yuan"></canvas>
 				</div>
 				<div class="list">
 					<ul>
@@ -81,7 +81,8 @@
 		</div>
 	
         <div class="btnbar">
-            <a v-on:click.stop="redo"><img title="重做" src="img/redo.png" /></a>
+			<!-- <a href="javascript:;"><img title="重做" src="img/redo.png" /></a> -->
+			<a @click="redo()"><img title="重做" src="img/redo.png" /></a>
         </div>
     </div>
 </div>

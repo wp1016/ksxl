@@ -9,6 +9,21 @@
 var method = {};
 
 /**
+ * 刷新重做方法 by yigeng
+ */
+
+method.refresh = function(){
+	vm.$data.times++;
+	vm.$data.currentModuleIndex = 0;
+	vm.$data.userAns = [];
+	vm.$data.ansResults = [];
+	vm.$data.minutes = 0;
+	vm.$data.seconds = 0; 	        
+	vm.$data.totalRightNum = 0;
+	vm.$data.currentTestIndex = 0;
+}
+
+/**
  * 处理滚动条元素在在电子白板上无法通过触摸滚动的问题
  * 放在method全局对象上供电子白板调用
  */
